@@ -1,0 +1,10 @@
+POST http://localhost:3003/usuario
+Content-Type: application/json
+
+{
+    "email": "lunaambrozino@gmail.com",
+    "primeiro_nome": "Luna",
+    "ultimo_nome": "Ambrozino",
+    "telefone": "5521995116053",
+    "password": "lunaambrozino"
+}

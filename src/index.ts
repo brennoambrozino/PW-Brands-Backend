@@ -18,7 +18,7 @@ const userController = new UserController(
     userBusiness
 )
 
-// app.get("/usuario", userController.getAll)
+app.get("/usuario", userController.getAll)
 // app.get("/usuario/:id", userController.getById)
 app.post("/usuario", userController.signup)
 // app.put("/usuario/:id", userController.update)

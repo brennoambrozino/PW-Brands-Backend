@@ -96,4 +96,92 @@ export default class UserBusiness{
 
         return token
     }
+
+    public getAll = async(nome:string, exibir:number, pagina:number) => {
+
+        const queryResult:any = await this.userData.getAll()
+
+        if(!queryResult) {
+            throw new Error("Erro ao requisitar os usuários")
+        }
+
+        let data = []
+        let response = [{}]
+
+        for (let user of queryResult) {
+            
+            const users = {
+                id: user.id,
+				email: user.email,
+				primeiro_nome: user.primeiro_nome,
+				ultimo_nome: user.ultimo_nome,
+				telefone: user.telefone,
+				avatar: user.avatar 
+            }
+            data.push(users)
+        }
+
+        // response = {
+        //     pagina:1,
+        //     items_exibidos: 5,
+        //     total_items: data.length,
+        //     total_paginas: data.length/5,
+        //     data: data
+        // }
+
+        if(nome){
+            data = []
+
+            for(let user of queryResult) {
+                if(user.primeiro_nome.toUpperCase().includes(`${nome.toUpperCase()}`) === true) {
+                    const users = {
+                        id: user.id,
+                        email: user.email,
+                        primeiro_nome: user.primeiro_nome,
+                        ultimo_nome: user.ultimo_nome,
+                        telefone: user.telefone,
+                        avatar: user.avatar 
+                    }
+                    data.push(users)
+                }
+            }
+        }
+
+        if(exibir) {
+            data = []
+            const queryResultPage:any= await this.userData.getAllByPage(pagina,exibir)
+
+            for (let user of queryResultPage) {
+            
+                const users = {
+                    id: user.id,
+                    email: user.email,
+                    primeiro_nome: user.primeiro_nome,
+                    ultimo_nome: user.ultimo_nome,
+                    telefone: user.telefone,
+                    avatar: user.avatar 
+                }
+                data.push(users)
+            }
+
+            response = [{
+                pagina:pagina,
+                items_exibidos: exibir,
+                total_items: queryResult.length,
+                total_paginas: queryResult.length/exibir,
+                data: data
+            }]
+
+        }
+
+        if(data.length === 0){
+            data = ["Nenhum usuário encontrado"]
+        }
+
+        if(response.length !== 0) {
+            return response
+        } else {
+            return data
+        }
+    }
 }

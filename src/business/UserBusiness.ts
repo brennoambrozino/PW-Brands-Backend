@@ -106,7 +106,7 @@ export default class UserBusiness{
         }
 
         let data = []
-        let response = [{}]
+        let response = {}
 
         for (let user of queryResult) {
             
@@ -120,14 +120,6 @@ export default class UserBusiness{
             }
             data.push(users)
         }
-
-        // response = {
-        //     pagina:1,
-        //     items_exibidos: 5,
-        //     total_items: data.length,
-        //     total_paginas: data.length/5,
-        //     data: data
-        // }
 
         if(nome){
             data = []
@@ -164,21 +156,66 @@ export default class UserBusiness{
                 data.push(users)
             }
 
-            response = [{
-                pagina:pagina,
-                items_exibidos: exibir,
-                total_items: queryResult.length,
-                total_paginas: queryResult.length/exibir,
-                data: data
-            }]
+            if(nome) {
+                data = []
+                const queryResultName:any = await this.userData.getAllByName(nome) 
+                const queryResultPageName:any= await this.userData.getAllByPageName(pagina,exibir,nome)
 
+                if(queryResultPageName){
+                    for (let user of queryResultPageName) {
+                
+                        const users = {
+                            id: user.id,
+                            email: user.email,
+                            primeiro_nome: user.primeiro_nome,
+                            ultimo_nome: user.ultimo_nome,
+                            telefone: user.telefone,
+                            avatar: user.avatar 
+                        }
+                        data.push(users)
+                    }
+                }
+
+                let total_paginas = queryResultName.length/exibir
+
+                if(Number.isInteger(total_paginas) === false){
+                    const integer = total_paginas.toString().split(".")
+                    total_paginas = Number(integer[0]) + 1
+                }
+
+                response = {
+                    pagina:pagina,
+                    items_exibidos: data.length,
+                    total_items: queryResultName.length,
+                    total_paginas: total_paginas,
+                    data: data
+                }
+
+            } else {
+                let total_paginas = queryResult.length/exibir
+
+                if(Number.isInteger(total_paginas) === false){
+                    const integer = total_paginas.toString().split(".")
+                    total_paginas = Number(integer[0]) + 1
+                }
+
+                response = {
+                    pagina:pagina,
+                    items_exibidos: data.length,
+                    total_items: queryResult.length,
+                    total_paginas: total_paginas,
+                    data: data
+                }
+            }
+
+    
         }
 
         if(data.length === 0){
             data = ["Nenhum usuário encontrado"]
         }
 
-        if(response.length !== 0) {
+        if(Object.keys(response).length !== 0) {
             return response
         } else {
             return data

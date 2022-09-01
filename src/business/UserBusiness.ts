@@ -15,7 +15,7 @@ export default class UserBusiness{
         private authenticator:Authenticator
     ){}
 
-    public signup = async(input:signupInputDTO) => {
+    public signup = async(input:signupInputDTO):Promise<string> => {
         const { email, primeiro_nome, ultimo_nome, telefone, password} = input
 
         let telefoneUniversalMethod = telefone
@@ -29,8 +29,8 @@ export default class UserBusiness{
             throw new Error("É necessário conter '@' no email")   
         }
 
-        if(email.indexOf(".c") === -1) {
-            throw new Error("É necessário conter '.c' no email")   
+        if(email.indexOf(".") === -1) {
+            throw new Error("É necessário conter '.' no email")   
         }
 
         if(primeiro_nome.length < 3 ) {
@@ -220,5 +220,24 @@ export default class UserBusiness{
         } else {
             return data
         }
+    }
+
+    public getById = async(id:string) => {
+        const queryResult:any = await this.userData.getById(id)
+
+        if(!queryResult) {
+            throw new Error("Usuário não encontrado, confira se o id está correto")
+        }
+
+        const response = {
+            id: queryResult.id,
+            email: queryResult.email,
+            primeiro_nome: queryResult.primeiro_nome,
+            ultimo_nome: queryResult.ultimo_nome,
+            telefone: queryResult.telefone,
+            avatar: queryResult.avatar
+        }
+
+        return response
     }
 }

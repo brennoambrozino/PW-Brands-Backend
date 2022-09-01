@@ -106,6 +106,21 @@ export default class UserData extends BaseDataBase{
         }
     }
 
+    public getById = async (id:string):Promise<User> => {
+        try {
+            const queryResult:User[] = await this
+                .connection(this.TABLE_NAME)
+                .select()
+                .where({id})
+            return queryResult[0]
+        } catch (error) {
+            if (error instanceof Error) {
+                throw new Error(error.message)
+            } else {
+                throw new Error("Error do banco !")
+            }
+        }
+    }
 
     
 }

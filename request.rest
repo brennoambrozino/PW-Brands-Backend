@@ -1,4 +1,9 @@
-GET http://localhost:3003/usuario?exibir=2&pagina=2&nome=a
+GET http://localhost:3003/usuario
+Content-Type: application/json
+
+###
+
+GET http://localhost:3003/usuario/dd5d1570-d098-4bc6-9b61-4ee60bac5e3b
 Content-Type: application/json
 
 ###

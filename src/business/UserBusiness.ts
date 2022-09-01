@@ -96,4 +96,129 @@ export default class UserBusiness{
 
         return token
     }
+
+    public getAll = async(nome:string, exibir:number, pagina:number) => {
+
+        const queryResult:any = await this.userData.getAll()
+
+        if(!queryResult) {
+            throw new Error("Erro ao requisitar os usuários")
+        }
+
+        let data = []
+        let response = {}
+
+        for (let user of queryResult) {
+            
+            const users = {
+                id: user.id,
+				email: user.email,
+				primeiro_nome: user.primeiro_nome,
+				ultimo_nome: user.ultimo_nome,
+				telefone: user.telefone,
+				avatar: user.avatar 
+            }
+            data.push(users)
+        }
+
+        if(nome){
+            data = []
+
+            for(let user of queryResult) {
+                if(user.primeiro_nome.toUpperCase().includes(`${nome.toUpperCase()}`) === true) {
+                    const users = {
+                        id: user.id,
+                        email: user.email,
+                        primeiro_nome: user.primeiro_nome,
+                        ultimo_nome: user.ultimo_nome,
+                        telefone: user.telefone,
+                        avatar: user.avatar 
+                    }
+                    data.push(users)
+                }
+            }
+        }
+
+        if(exibir) {
+            data = []
+            const queryResultPage:any= await this.userData.getAllByPage(pagina,exibir)
+
+            for (let user of queryResultPage) {
+            
+                const users = {
+                    id: user.id,
+                    email: user.email,
+                    primeiro_nome: user.primeiro_nome,
+                    ultimo_nome: user.ultimo_nome,
+                    telefone: user.telefone,
+                    avatar: user.avatar 
+                }
+                data.push(users)
+            }
+
+            if(nome) {
+                data = []
+                const queryResultName:any = await this.userData.getAllByName(nome) 
+                const queryResultPageName:any= await this.userData.getAllByPageName(pagina,exibir,nome)
+
+                if(queryResultPageName){
+                    for (let user of queryResultPageName) {
+                
+                        const users = {
+                            id: user.id,
+                            email: user.email,
+                            primeiro_nome: user.primeiro_nome,
+                            ultimo_nome: user.ultimo_nome,
+                            telefone: user.telefone,
+                            avatar: user.avatar 
+                        }
+                        data.push(users)
+                    }
+                }
+
+                let total_paginas = queryResultName.length/exibir
+
+                if(Number.isInteger(total_paginas) === false){
+                    const integer = total_paginas.toString().split(".")
+                    total_paginas = Number(integer[0]) + 1
+                }
+
+                response = {
+                    pagina:pagina,
+                    items_exibidos: data.length,
+                    total_items: queryResultName.length,
+                    total_paginas: total_paginas,
+                    data: data
+                }
+
+            } else {
+                let total_paginas = queryResult.length/exibir
+
+                if(Number.isInteger(total_paginas) === false){
+                    const integer = total_paginas.toString().split(".")
+                    total_paginas = Number(integer[0]) + 1
+                }
+
+                response = {
+                    pagina:pagina,
+                    items_exibidos: data.length,
+                    total_items: queryResult.length,
+                    total_paginas: total_paginas,
+                    data: data
+                }
+            }
+
+    
+        }
+
+        if(data.length === 0){
+            data = ["Nenhum usuário encontrado"]
+        }
+
+        if(Object.keys(response).length !== 0) {
+            return response
+        } else {
+            return data
+        }
+    }
 }

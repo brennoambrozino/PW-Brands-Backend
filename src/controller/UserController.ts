@@ -9,7 +9,7 @@ export default class UserController {
         private userBusiness: UserBusiness
     ){}
 
-    signup = async(req:Request, res:Response) => {
+    public signup = async(req:Request, res:Response) => {
         const {email, primeiro_nome, ultimo_nome, telefone, password} = req.body
 
         const input: signupInputDTO = { 
@@ -32,5 +32,21 @@ export default class UserController {
             res.status(500).send("Erro no signup")
         }
 
+    }
+
+    public getAll = async(req:Request, res:Response) => {
+
+        const {nome, exibir, pagina} = req.query
+        
+        const users = await this.userBusiness.getAll(nome as string, Number(exibir), Number(pagina))
+
+        try {
+            res.status(200).send(users)
+        } catch (error) {
+            if (error instanceof Error) {
+                return res.status(400).send(error.message)
+            }
+            res.status(500).send("Erro ao Localizar os Usuários")
+        }
     }
 }

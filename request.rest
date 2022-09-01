@@ -1,10 +1,15 @@
+GET http://localhost:3003/usuario?exibir=2&pagina=2&nome=a
+Content-Type: application/json
+
+###
+
 POST http://localhost:3003/usuario
 Content-Type: application/json
 
 {
-    "email": "lunaambrozino@gmail.com",
-    "primeiro_nome": "Luna",
+    "email": "athenaambrozino@gmail.com",
+    "primeiro_nome": "Athena",
     "ultimo_nome": "Ambrozino",
     "telefone": "5521995116053",
-    "password": "lunaambrozino"
+    "password": "athenaambrozino"
 }

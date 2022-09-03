@@ -1,4 +1,5 @@
 import User from "../model/User"
+import { updateInputDTO } from "../types/updateInputDTO"
 import { BaseDataBase } from "./BaseDataBase"
 
 export default class UserData extends BaseDataBase{
@@ -122,5 +123,18 @@ export default class UserData extends BaseDataBase{
         }
     }
 
-    
+    public update = async (id:string, input:updateInputDTO):Promise<void> => {
+        try {
+            await this
+            .connection(this.TABLE_NAME)
+            .update(input)
+            .where({id})
+        } catch (error) {
+            if (error instanceof Error) {
+                throw new Error(error.message)
+            } else {
+                throw new Error("Error do banco !")
+            }
+        }
+    }    
 }

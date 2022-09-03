@@ -1,9 +1,9 @@
-GET http://localhost:3003/usuario
+GET http://localhost:3003/usuario?nome=gabriel
 Content-Type: application/json
 
 ###
 
-GET http://localhost:3003/usuario/dd5d1570-d098-4bc6-9b61-4ee60bac5e3b
+GET http://localhost:3003/usuario/305176b0-7a40-4662-977c-6a03ae30d697
 Content-Type: application/json
 
 ###
@@ -12,9 +12,22 @@ POST http://localhost:3003/usuario
 Content-Type: application/json
 
 {
-    "email": "athenaambrozino@gmail.com",
-    "primeiro_nome": "Athena",
-    "ultimo_nome": "Ambrozino",
+    "email": "gabrielpereira@gmail.com",
+    "primeiro_nome": "Gabriel",
+    "ultimo_nome": "Pereira",
     "telefone": "5521995116053",
-    "password": "athenaambrozino"
+    "password": "gabrielpereira"
+}
+
+###
+
+PUT http://localhost:3003/usuario/305176b0-7a40-4662-977c-6a03ae30d697
+Content-Type: application/json
+
+{
+    "email": "gabrielgomes@gmail.com",
+    "primeiro_nome": "Gabriel",
+    "ultimo_nome": "Gomes",
+    "telefone": "5521995116054",
+    "senha": "gabrielgomes"
 }

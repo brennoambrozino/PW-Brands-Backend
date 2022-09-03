@@ -11,14 +11,14 @@ export default class UserController {
     ){}
 
     public signup = async(req:Request, res:Response) => {
-        const {email, primeiro_nome, ultimo_nome, telefone, password} = req.body
+        const {email, primeiro_nome, ultimo_nome, telefone, senha} = req.body
 
         const input: signupInputDTO = { 
             email,
             primeiro_nome,
             ultimo_nome,
             telefone,
-            password
+            senha
         }
 
         try {

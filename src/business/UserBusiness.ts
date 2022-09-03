@@ -1,4 +1,6 @@
 import UserData from "../data/UserData"
+import { CustomError } from "../errors/CustomError"
+import { Errors } from "../errors/Errors"
 import User from "../model/User"
 import { Authenticator } from "../services/Authenticator"
 import { HashManager } from "../services/HashManager"
@@ -13,58 +15,16 @@ export default class UserBusiness{
         private userData:UserData,
         private idGenerator:IdGenerator,
         private hashManager:HashManager,
-        private authenticator:Authenticator
+        private authenticator:Authenticator,
+        private errors: Errors
     ){}
 
     public signup = async(input:signupInputDTO):Promise<string> => {
-        const { email, primeiro_nome, ultimo_nome, telefone, password} = input
+        const { email, primeiro_nome, ultimo_nome, telefone, senha } = input
 
         let telefoneUniversalMethod = telefone
 
-
-        if(!email || !primeiro_nome || !ultimo_nome || !telefone || !password) {
-            throw new Error("Campos inválidos")
-        }
-
-        if(email.indexOf("@") === -1) {
-            throw new Error("É necessário conter '@' no email")   
-        }
-
-        if(email.indexOf(".") === -1) {
-            throw new Error("É necessário conter '.' no email")   
-        }
-
-        if(primeiro_nome.length < 3 ) {
-            throw new Error("É necessário que o nome tenha mais de 3 caracteres")
-        }
-
-        if(ultimo_nome.length > 30) {
-            throw new Error("É necessário que o nome tenha menos de 30 caracteres")
-        }
-
-        if(ultimo_nome.length < 3 ) {
-            throw new Error("É necessário que o sobrenome tenha mais de 3 caracteres")
-        }
-
-        if(primeiro_nome.length > 30) {
-            throw new Error("É necessário que o sobrenome tenha menos de 30 caracteres")
-        }
-
-        if(password.length < 6) {
-            throw new Error("A senha deve ter no mínimo 6 caracteres")
-        }
-
-        if(telefoneUniversalMethod.length < 13 || telefoneUniversalMethod.length > 14){
-            throw new Error("O telefone deve ser inserido no modelo '+55XX9XXXXXXXX' ")
-        }
-
-        if(telefoneUniversalMethod.length === 13 && telefoneUniversalMethod[0] === "+"){
-            throw new Error("O telefone deve ser inserido no modelo '+55XX9XXXXXXXX' ")
-        }
-
-        if(telefoneUniversalMethod.length === 14 && telefoneUniversalMethod[0] !== "+"){
-            throw new Error("O telefone deve ser inserido no modelo '+55XX9XXXXXXXX' ")
-        }
+        this.errors.signUpAndUpdate(email, primeiro_nome, ultimo_nome, telefone, senha, telefoneUniversalMethod)
 
         if(telefoneUniversalMethod[0] !== "+"){
             telefoneUniversalMethod = "+" + telefoneUniversalMethod
@@ -74,12 +34,12 @@ export default class UserBusiness{
 
         const registeredUser = await this.userData.findByEmail(email)
         if(registeredUser){
-            throw new Error("Email já cadastrado")
+            throw new CustomError(409,"Email já cadastrado")
         }
         
         const id = this.idGenerator.generateId()
 
-        const hashedPassword = await this.hashManager.hash(password)
+        const hashedPassword = await this.hashManager.hash(senha)
 
         const user = new User(
             id,
@@ -103,7 +63,7 @@ export default class UserBusiness{
         const queryResult:any = await this.userData.getAll()
 
         if(!queryResult) {
-            throw new Error("Erro ao requisitar os usuários")
+            throw new CustomError(500,"Erro ao requisitar os usuários")
         }
 
         let data = []
@@ -227,7 +187,7 @@ export default class UserBusiness{
         const queryResult:any = await this.userData.getById(id)
 
         if(!queryResult) {
-            throw new Error("Usuário não encontrado, confira se o id está correto")
+            throw new CustomError(404,"Usuário não encontrado, confira se o id está correto")
         }
 
         const response = {
@@ -257,49 +217,7 @@ export default class UserBusiness{
 
         let telefoneUniversalMethod = telefone
 
-        if(!email || !primeiro_nome || !ultimo_nome || !telefone || !senha) {
-            throw new Error("Campos inválidos")
-        }
-
-        if(email.indexOf("@") === -1) {
-            throw new Error("É necessário conter '@' no email")   
-        }
-
-        if(email.indexOf(".") === -1) {
-            throw new Error("É necessário conter '.' no email")   
-        }
-
-        if(primeiro_nome.length < 3 ) {
-            throw new Error("É necessário que o nome tenha mais de 3 caracteres")
-        }
-
-        if(ultimo_nome.length > 30) {
-            throw new Error("É necessário que o nome tenha menos de 30 caracteres")
-        }
-
-        if(ultimo_nome.length < 3 ) {
-            throw new Error("É necessário que o sobrenome tenha mais de 3 caracteres")
-        }
-
-        if(primeiro_nome.length > 30) {
-            throw new Error("É necessário que o sobrenome tenha menos de 30 caracteres")
-        }
-
-        if(senha.length < 6) {
-            throw new Error("A senha deve ter no mínimo 6 caracteres")
-        }
-
-        if(telefoneUniversalMethod.length < 13 || telefoneUniversalMethod.length > 14){
-            throw new Error("O telefone deve ser inserido no modelo '+55XX9XXXXXXXX' ")
-        }
-
-        if(telefoneUniversalMethod.length === 13 && telefoneUniversalMethod[0] === "+"){
-            throw new Error("O telefone deve ser inserido no modelo '+55XX9XXXXXXXX' ")
-        }
-
-        if(telefoneUniversalMethod.length === 14 && telefoneUniversalMethod[0] !== "+"){
-            throw new Error("O telefone deve ser inserido no modelo '+55XX9XXXXXXXX' ")
-        }
+        this.errors.signUpAndUpdate(email, primeiro_nome, ultimo_nome, telefone, senha, telefoneUniversalMethod )
 
         if(telefoneUniversalMethod[0] !== "+"){
             telefoneUniversalMethod = "+" + telefoneUniversalMethod
@@ -311,7 +229,7 @@ export default class UserBusiness{
     public delete = async(id:string) => {
         const registeredUser = await this.userData.getById(id)
         if(!registeredUser){
-            throw new Error("Id inválido")
+            throw new CustomError(404,"Id inválido")
         }
 
         await this.userData.delete(id)

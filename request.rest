@@ -12,11 +12,11 @@ POST http://localhost:3003/usuario
 Content-Type: application/json
 
 {
-    "email": "gabrielpereira@gmail.com",
-    "primeiro_nome": "Gabriel",
-    "ultimo_nome": "Pereira",
+    "email": "marvin@gmail.com",
+    "primeiro_nome": "Marvin",
+    "ultimo_nome": "Ambrozino",
     "telefone": "5521995116053",
-    "password": "gabrielpereira"
+    "senha": "marvinambrozino"
 }
 
 ###

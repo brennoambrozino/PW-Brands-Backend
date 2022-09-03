@@ -307,4 +307,13 @@ export default class UserBusiness{
 
         await this.userData.update(id, input)
     }
+
+    public delete = async(id:string) => {
+        const registeredUser = await this.userData.getById(id)
+        if(!registeredUser){
+            throw new Error("Id inválido")
+        }
+
+        await this.userData.delete(id)
+    }
 }

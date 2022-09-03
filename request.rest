@@ -31,3 +31,8 @@ Content-Type: application/json
     "telefone": "5521995116054",
     "senha": "gabrielgomes"
 }
+
+###
+
+DELETE http://localhost:3003/usuario/305176b0-7a40-4662-977c-6a03ae30d697
+Content-Type: application/json

@@ -21,5 +21,5 @@ const userController = new UserController(
 app.get("/usuario", userController.getAll)
 app.get("/usuario/:id", userController.getById)
 app.post("/usuario", userController.signup)
-// app.put("/usuario/:id", userController.update)
+app.put("/usuario/:id", userController.update)
 // app.delete("/usuario/:id", userController.delete)

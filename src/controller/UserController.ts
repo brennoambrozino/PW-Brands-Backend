@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import UserBusiness from "../business/UserBusiness"
 import { signupInputDTO } from "../types/signUpInputDTO"
+import { updateInputDTO } from "../types/updateInputDTO"
 
 
 export default class UserController {
@@ -52,17 +53,41 @@ export default class UserController {
 
     public getById = async(req:Request, res:Response) => {
 
-        const {id} = req.params
+        const { id } = req.params
         
         const user = await this.userBusiness.getById(id)
 
         try {
-            res.status(200).send(user)
+            res.status(200).send({data:user})
         } catch (error) {
             if (error instanceof Error) {
                 return res.status(400).send(error.message)
             }
             res.status(500).send("Erro ao Localizar o Usuário")
+        }
+    }
+
+    public update = async(req:Request, res:Response) => {
+        const { id } = req.params
+
+        const { email, primeiro_nome, ultimo_nome, telefone, senha} = req.body
+
+        const input: updateInputDTO = {
+            email,
+            primeiro_nome,
+            ultimo_nome,
+            telefone,
+            senha
+        }
+
+        try {
+            await this.userBusiness.update(id, input)
+            res.status(200).send({message:"Usuário atualizado com sucesso"})
+        } catch (error) {
+            if (error instanceof Error) {
+                return res.status(400).send(error.message)
+            }
+            res.status(500).send("Erro ao Atualizar o Usuário")
         }
     }
 }

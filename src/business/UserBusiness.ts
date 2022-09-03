@@ -4,6 +4,7 @@ import { Authenticator } from "../services/Authenticator"
 import { HashManager } from "../services/HashManager"
 import { IdGenerator } from "../services/IdGenerator"
 import { signupInputDTO } from "../types/signUpInputDTO"
+import { updateInputDTO } from "../types/updateInputDTO"
 
 
 export default class UserBusiness{
@@ -239,5 +240,71 @@ export default class UserBusiness{
         }
 
         return response
+    }
+
+    public update = async(id:string, input:updateInputDTO) => {
+        const { email, primeiro_nome, ultimo_nome, telefone, senha} = input
+
+        const registeredEmail = await this.userData.findByEmail(email)
+        if(registeredEmail){
+            throw new Error("Email já cadastrado")
+        }        
+        
+        const registeredUser = await this.userData.getById(id)
+        if(!registeredUser){
+            throw new Error("Id inválido")
+        }
+
+        let telefoneUniversalMethod = telefone
+
+        if(!email || !primeiro_nome || !ultimo_nome || !telefone || !senha) {
+            throw new Error("Campos inválidos")
+        }
+
+        if(email.indexOf("@") === -1) {
+            throw new Error("É necessário conter '@' no email")   
+        }
+
+        if(email.indexOf(".") === -1) {
+            throw new Error("É necessário conter '.' no email")   
+        }
+
+        if(primeiro_nome.length < 3 ) {
+            throw new Error("É necessário que o nome tenha mais de 3 caracteres")
+        }
+
+        if(ultimo_nome.length > 30) {
+            throw new Error("É necessário que o nome tenha menos de 30 caracteres")
+        }
+
+        if(ultimo_nome.length < 3 ) {
+            throw new Error("É necessário que o sobrenome tenha mais de 3 caracteres")
+        }
+
+        if(primeiro_nome.length > 30) {
+            throw new Error("É necessário que o sobrenome tenha menos de 30 caracteres")
+        }
+
+        if(senha.length < 6) {
+            throw new Error("A senha deve ter no mínimo 6 caracteres")
+        }
+
+        if(telefoneUniversalMethod.length < 13 || telefoneUniversalMethod.length > 14){
+            throw new Error("O telefone deve ser inserido no modelo '+55XX9XXXXXXXX' ")
+        }
+
+        if(telefoneUniversalMethod.length === 13 && telefoneUniversalMethod[0] === "+"){
+            throw new Error("O telefone deve ser inserido no modelo '+55XX9XXXXXXXX' ")
+        }
+
+        if(telefoneUniversalMethod.length === 14 && telefoneUniversalMethod[0] !== "+"){
+            throw new Error("O telefone deve ser inserido no modelo '+55XX9XXXXXXXX' ")
+        }
+
+        if(telefoneUniversalMethod[0] !== "+"){
+            telefoneUniversalMethod = "+" + telefoneUniversalMethod
+        }
+
+        await this.userData.update(id, input)
     }
 }

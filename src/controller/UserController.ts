@@ -90,4 +90,18 @@ export default class UserController {
             res.status(500).send("Erro ao Atualizar o Usuário")
         }
     }
+
+    public delete = async(req:Request, res:Response) => {
+        const { id } = req.params
+
+        try {
+            await this.userBusiness.delete(id)
+            res.status(200).send({message:"Usuário deletado com sucesso"})
+        } catch (error) {
+            if (error instanceof Error) {
+                return res.status(400).send(error.message)
+            }
+            res.status(500).send("Erro ao Deletar o Usuário")
+        }
+    } 
 }

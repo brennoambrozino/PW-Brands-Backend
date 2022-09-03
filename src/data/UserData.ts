@@ -136,5 +136,20 @@ export default class UserData extends BaseDataBase{
                 throw new Error("Error do banco !")
             }
         }
-    }    
+    }
+    
+    public delete = async (id:string) => {
+        try {
+            await this
+            .connection(this.TABLE_NAME)
+            .delete()
+            .where({id})
+        } catch (error) {
+            if (error instanceof Error) {
+                throw new Error(error.message)
+            } else {
+                throw new Error("Error do banco !")
+            }
+        }
+    }
 }

@@ -1,5 +1,6 @@
 import { Request, Response } from "express"
 import UserBusiness from "../business/UserBusiness"
+import { Errors } from "../errors/Errors"
 import { signupInputDTO } from "../types/signUpInputDTO"
 import { updateInputDTO } from "../types/updateInputDTO"
 
@@ -7,7 +8,8 @@ import { updateInputDTO } from "../types/updateInputDTO"
 export default class UserController {
 
     constructor(
-        private userBusiness: UserBusiness
+        private userBusiness: UserBusiness,
+        public errors: Errors
     ){}
 
     public signup = async(req:Request, res:Response) => {
@@ -27,10 +29,7 @@ export default class UserController {
             res.status(201).send({message: "Usuário cadastrado com sucesso", token})
             
         } catch (error) {
-            if (error instanceof Error) {
-                return res.status(400).send(error.message)
-            }
-            res.status(500).send("Erro no signup")
+            this.errors.controller(error, res, "Erro no signup")
         }
 
     }
@@ -44,10 +43,7 @@ export default class UserController {
         try {
             res.status(200).send(users)
         } catch (error) {
-            if (error instanceof Error) {
-                return res.status(400).send(error.message)
-            }
-            res.status(500).send("Erro ao Localizar os Usuários")
+            this.errors.controller(error, res, "Erro ao Localizar os Usuários")
         }
     }
 
@@ -60,10 +56,7 @@ export default class UserController {
         try {
             res.status(200).send({data:user})
         } catch (error) {
-            if (error instanceof Error) {
-                return res.status(400).send(error.message)
-            }
-            res.status(500).send("Erro ao Localizar o Usuário")
+            this.errors.controller(error, res, "Erro ao Localizar o Usuário")
         }
     }
 
@@ -84,10 +77,7 @@ export default class UserController {
             await this.userBusiness.update(id, input)
             res.status(200).send({message:"Usuário atualizado com sucesso"})
         } catch (error) {
-            if (error instanceof Error) {
-                return res.status(400).send(error.message)
-            }
-            res.status(500).send("Erro ao Atualizar o Usuário")
+            this.errors.controller(error, res, "Erro ao Atualizar o Usuário")
         }
     }
 
@@ -98,10 +88,7 @@ export default class UserController {
             await this.userBusiness.delete(id)
             res.status(200).send({message:"Usuário deletado com sucesso"})
         } catch (error) {
-            if (error instanceof Error) {
-                return res.status(400).send(error.message)
-            }
-            res.status(500).send("Erro ao Deletar o Usuário")
+            this.errors.controller(error, res, "Erro ao Deletar o Usuário")
         }
     } 
 }

@@ -1,9 +1,9 @@
-GET http://localhost:3003/usuario?nome=gabriel
+GET http://localhost:3003/usuario?nome=pedro
 Content-Type: application/json
 
 ###
 
-GET http://localhost:3003/usuario/305176b0-7a40-4662-977c-6a03ae30d697
+GET http://localhost:3003/usuario/305176b0-74662-977c-6a03ae30d697
 Content-Type: application/json
 
 ###

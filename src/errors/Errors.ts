@@ -54,4 +54,11 @@ export class Errors {
             throw new CustomError(401,"O telefone deve ser inserido no modelo '+55XX9XXXXXXXX' ")
         }
     }
+
+    public controller = (error:any, res:any, message:string) => {
+        if (error instanceof Error) {
+            return res.status(400).send(error.message)
+        }
+        res.status(500).send(message)
+    }
 }

@@ -17,7 +17,8 @@ const userBusiness = new UserBusiness(
 
 
 const userController = new UserController(
-    userBusiness
+    userBusiness,
+    new Errors()
 )
 
 app.get("/usuario", userController.getAll)

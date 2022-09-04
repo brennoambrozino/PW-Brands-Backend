@@ -26,7 +26,7 @@ export class Errors {
             throw new CustomError(401,"É necessário que o nome tenha mais de 3 caracteres")
         }
     
-        if(ultimo_nome.length > 30) {
+        if(primeiro_nome.length > 30) {
             throw new CustomError(401,"É necessário que o nome tenha menos de 30 caracteres")
         }
     
@@ -34,7 +34,7 @@ export class Errors {
             throw new CustomError(401,"É necessário que o sobrenome tenha mais de 3 caracteres")
         }
     
-        if(primeiro_nome.length > 30) {
+        if(ultimo_nome.length > 30) {
             throw new CustomError(401,"É necessário que o sobrenome tenha menos de 30 caracteres")
         }
     

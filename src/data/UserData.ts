@@ -107,7 +107,7 @@ export default class UserData extends BaseDataBase{
         }
     }
 
-    public getById = async (id:string):Promise<User> => {
+    public getById = async (id:string):Promise<User | undefined> => {
         try {
             const queryResult:User[] = await this
                 .connection(this.TABLE_NAME)

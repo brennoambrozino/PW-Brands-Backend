@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node ./build/index.js",
     "build": "tsc",
-    "dev": "tsnd src/index.ts"
+    "dev": "tsnd src/index.ts",
+    "test": "clear && echo \"Running tests...\" && jest",
+    "postinstall": "tsc"
   },
   "repository": {
     "type": "git",

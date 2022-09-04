@@ -202,18 +202,18 @@ export default class UserBusiness{
         return response
     }
 
-    public update = async(id:string, input:updateInputDTO) => {
+    public update = async(id:string, input:updateInputDTO):Promise<void> => {
         const { email, primeiro_nome, ultimo_nome, telefone, senha} = input
 
-        const registeredEmail = await this.userData.findByEmail(email)
-        if(registeredEmail){
-            throw new Error("Email já cadastrado")
-        }        
-        
-        const registeredUser = await this.userData.getById(id)
+        const registeredUser:any = await this.userData.getById(id)
         if(!registeredUser){
-            throw new Error("Id inválido")
+            throw new CustomError(404,"Id inválido")
         }
+
+        const registeredEmail:any = await this.userData.findByEmail(email)
+        if(registeredEmail && registeredUser.email !== registeredEmail.email){
+            throw new CustomError(409,"Email já cadastrado")
+        }        
 
         let telefoneUniversalMethod = telefone
 
@@ -226,7 +226,7 @@ export default class UserBusiness{
         await this.userData.update(id, input)
     }
 
-    public delete = async(id:string) => {
+    public delete = async(id:string):Promise<void> => {
         const registeredUser = await this.userData.getById(id)
         if(!registeredUser){
             throw new CustomError(404,"Id inválido")

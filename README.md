@@ -15,7 +15,7 @@ Desenvolvi essa API durante o processo seletivo da empresa PW Brands para a vaga
 
 ##  🎯Objetivo do Projeto
 
-Este é um teste de Back-end, cujo o principal objetivo é demonstrar meus conhecimentos e habilidades em : Produção de um Banco de Dados e criação de Api's.
+Este é um teste de Back-end, cujo o principal objetivo é demonstrar meus conhecimentos e habilidades em : Produção de Banco de Dados e criação de Api's.
 
 Tecnologias utilizadas: REST, Api Restful, Jest, HTTP, NodeJS, Knex,
 TypeScript, MySQL, SQL, Git, GitHub.
